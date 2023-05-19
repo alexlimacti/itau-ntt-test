@@ -5,8 +5,7 @@ import com.itau.test.annotations.NotEmptySkills;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.ElementCollection;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
@@ -19,8 +18,8 @@ public class UserRequestDTO {
     @Pattern(regexp = "^[a-zA-Z0-9.\\-\\/+=@_ ]*$")
     private String name;
 
+    @Email
     @NotBlank
-    @Pattern(regexp = "^[a-zA-Z0-9.\\-\\/+=@_ ]*$")
     private String email;
 
     @JsonFormat(pattern = "DD-MM-YYYY")
