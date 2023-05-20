@@ -1,9 +1,11 @@
 package com.itau.test.service;
 
+import com.itau.test.dto.UserRequestDTO;
 import com.itau.test.dto.UserResponseDTO;
+import com.itau.test.exception.AgeException;
+import com.itau.test.exception.EmailException;
 import com.itau.test.exception.UserException;
 import com.itau.test.mapper.UserMapper;
-import com.itau.test.model.User;
 import com.itau.test.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Service
@@ -33,10 +34,12 @@ public class UserService {
         return userMapper.getListUserResponseDTO(userRepository.findAll());
     }
 
-    public UserResponseDTO save(User entity) {
-        validMailProvider(entity.getEmail());
-        verifyUserAge(entity.getBirthday());
-        return userMapper.getUserResponseDTO(userRepository.save(entity));
+    public UserResponseDTO save(UserRequestDTO userRequestDTO) {
+        if(!userRepository.findByEmail(userRequestDTO.getEmail()).isEmpty()) throw new UserException("User already exist");
+        var user = userMapper.getUser(userRequestDTO);
+        validMailProvider(user.getEmail());
+        verifyUserAge(user.getBirthday());
+        return userMapper.getUserResponseDTO(userRepository.save(user));
     }
 
     public void deleteByEmail(String email) {
@@ -47,12 +50,12 @@ public class UserService {
 
     private void validMailProvider(String mail) {
         Pattern patternProvedoresValidos = Pattern.compile("@gmail.com|@hotmail.com|@outlook.com|@yahoo.com");
-        if (!patternProvedoresValidos.matcher(mail).find()) throw new UserException("Only accepted" +
+        if (!patternProvedoresValidos.matcher(mail).find()) throw new EmailException("Only accepted" +
                 " providers: Gmail, Hotmail, Outlook or Yahoo");
     }
 
     private void verifyUserAge(LocalDate birthDate) {
-        if(Period.between(birthDate, LocalDate.now()).getYears()<18) throw new UserException("Only accepted" +
+        if(Period.between(birthDate, LocalDate.now()).getYears()<18) throw new AgeException("Only accepted" +
                 " users from 18 years of age");
     }
 
