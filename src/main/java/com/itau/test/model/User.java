@@ -1,6 +1,9 @@
 package com.itau.test.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.CollectionTable;
@@ -12,11 +15,15 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "tb_user")
 public class User {
@@ -31,7 +38,7 @@ public class User {
     @NotBlank
     private String email;
 
-    @NotBlank
+    @NotNull
     private LocalDate birthday;
 
     @NotBlank
