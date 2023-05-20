@@ -27,7 +27,7 @@ import java.util.List;
 public class UserRequestDTO {
 
     @NotBlank(message = "Input name cannot be empty.")
-    @Pattern(regexp = "^[a-zA-Z0-9.\\-\\/+=@_ ]*$")
+    @Pattern(regexp = "^[a-zA-Z0-9. ]*$")
     private String name;
 
     @Email
